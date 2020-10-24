@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20201006144914) do
+ActiveRecord::Schema.define(version: 20201022112615) do
 
   create_table "authors", force: :cascade do |t|
     t.string   "email"
@@ -20,25 +20,50 @@ ActiveRecord::Schema.define(version: 20201006144914) do
     t.integer  "profile_image_type"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.integer  "facebooks_id"
+    t.integer  "twitters_id"
+    t.integer  "profiles_id"
+    t.boolean  "can_post"
+    t.string   "token"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.integer  "author_id"
+    t.integer  "post_id"
+    t.string   "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "facebooks", force: :cascade do |t|
     t.string   "profile_image"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.integer  "author_id"
   end
+
+  create_table "posts", force: :cascade do |t|
+    t.integer  "comment_id"
+    t.string   "article"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "posts", [nil], name: "index_posts_on_comment"
 
   create_table "profiles", force: :cascade do |t|
     t.string   "profile_image"
     t.string   "bio"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.integer  "author_id"
   end
 
   create_table "twitters", force: :cascade do |t|
     t.string   "profile_image"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.integer  "author_id"
   end
 
 end

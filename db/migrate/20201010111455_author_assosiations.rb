@@ -1,9 +1,9 @@
 class AuthorAssosiations < ActiveRecord::Migration
   def change
     change_table :authors do |t|
-      t.has_one :facebooks
-      t.has_one :twitters
-      t.has_one :profiles
+      t.references :facebooks
+      t.references :twitters
+      t.references :profiles
     end
   end
 end
