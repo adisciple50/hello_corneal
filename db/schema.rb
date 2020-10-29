@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20201022112615) do
+ActiveRecord::Schema.define(version: 20201025121421) do
 
   create_table "authors", force: :cascade do |t|
     t.string   "email"
@@ -26,6 +26,8 @@ ActiveRecord::Schema.define(version: 20201022112615) do
     t.boolean  "can_post"
     t.string   "token"
   end
+
+  add_index "authors", [nil], name: "unique_usernames", unique: true
 
   create_table "comments", force: :cascade do |t|
     t.integer  "author_id"
