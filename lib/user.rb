@@ -71,6 +71,22 @@ class User
     #   return picture
   end
 
+  def save_profile_pic mappings={profile:0,facebook:1,twitter:2}
+    #   get profile to load pic from
+    case @user.profile_image_type
+      when 0 # profile picture is default profile
+        self.load_profile
+        self.update_profile_pic.save!
+      when 1 # profile picture is facebook picture
+        self.load_facebook
+        self.update_profile_pic.save!
+      when 2 # profile picture is twitter picture
+        self.load_twitter
+        self.update_profile_pic.save!
+      else
+        Exception 'profile picture type not implemented - see load profile pic'
+    end
+  end
   private
 
   def load_facebook
@@ -88,4 +104,6 @@ class User
   def update_profile_pic
     @profile_pic = @profile.profile_image
   end
+
+
 end
