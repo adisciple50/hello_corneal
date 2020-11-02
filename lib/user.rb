@@ -1,12 +1,13 @@
 require_relative '../app/models/author'
 class User
   attr_accessor :username
-  # @password = ''
+  attr_accessor :profile_pic
   @user = false
   @profile = false
   @profile_pic = false
 
-  def initialize username,password
+  def initialize username
+    @username = username
     @user = Author.find_by({:username => username})
   end
 
@@ -29,6 +30,16 @@ class User
 
   def db
     @user
+  end
+
+  def create password
+    if @user != nil
+      @profile = Profile.create!
+      @user = Author.create({:username => @username,
+                             :password => BCrypt::Password.create(password),
+                             profile_image_type:0,profile:@profile.id})
+
+    end
   end
 
   def logged_in?
@@ -68,25 +79,16 @@ class User
       else
         Exception 'profile picture type not implemented - see load profile pic'
     end
-    #   return picture
   end
 
   def save_profile_pic mappings={profile:0,facebook:1,twitter:2}
-    #   get profile to load pic from
-    case @user.profile_image_type
-      when 0 # profile picture is default profile
-        self.load_profile
-        self.update_profile_pic.save!
-      when 1 # profile picture is facebook picture
-        self.load_facebook
-        self.update_profile_pic.save!
-      when 2 # profile picture is twitter picture
-        self.load_twitter
-        self.update_profile_pic.save!
-      else
-        Exception 'profile picture type not implemented - see load profile pic'
-    end
+    update_profile_pic!
   end
+
+  def update_profile_pic!
+    @profile.profile_image.save!
+  end
+
   private
 
   def load_facebook
@@ -104,6 +106,4 @@ class User
   def update_profile_pic
     @profile_pic = @profile.profile_image
   end
-
-
 end
