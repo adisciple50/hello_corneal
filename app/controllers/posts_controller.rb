@@ -1,3 +1,4 @@
+require_relative './application_controller'
 class PostsController < ApplicationController
 
   # GET: /posts
