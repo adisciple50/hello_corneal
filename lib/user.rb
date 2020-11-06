@@ -7,6 +7,7 @@ class User
   @user = false
   @profile = false
   @profile_pic = false
+  @token = false
 
   def initialize username
     @username = username
@@ -17,13 +18,14 @@ class User
     if @user.username
       # check password salt
       # https://github.com/codahale/bcrypt-ruby
-      storedpassword = @user.salt.to_s
-      hashedpassword = BCrypt::Password.new storedpassword
-      if hashedpassword == password
+      @storedpassword = @user.salt.to_s
+      @hashedpassword = BCrypt::Password.new storedpassword
+      if @hashedpassword == password
         # generate and store login token
-        token = SecureRandom.base64
-        @user.update({token:token})
-        return token
+        @@token = SecureRandom.base64
+        @user.update({token:@@token})
+        @token = @@token
+        return @@token
       else
         return false
       end
