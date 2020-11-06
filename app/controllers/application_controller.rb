@@ -12,22 +12,4 @@ class ApplicationController < Sinatra::Base
   get "/" do
     erb :welcome
   end
-
-  get "/login" do
-    erb :"login/login.html"
-  end
-
-  post '/login' do
-    username = params['username']
-    password = params['password']
-    begin
-      session[:token] = User(username).authenticate! password
-      # issue and record session token
-      # flash[:success] = "Login Successful" # A good Flash Test
-      redirect '/'
-    rescue
-      # flash[:danger] = "Username or Password not found"
-      redirect '/login'
-    end
-  end
 end
