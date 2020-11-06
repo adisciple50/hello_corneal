@@ -1,4 +1,6 @@
 require_relative '../app/models/author'
+require_relative '../app/models/facebook'
+require_relative '../app/models/twitter'
 class User
   attr_accessor :username
   attr_accessor :profile_pic
