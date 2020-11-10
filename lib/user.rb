@@ -4,23 +4,36 @@ require_relative '../app/models/twitter'
 class User
   attr_accessor :username
   attr_accessor :profile_pic
-  @user = false
-  @profile = false
-  @profile_pic = false
-  @token = false
 
-  def initialize username
-    @username = username
-    @user = Author.find_by({:username => username})
+
+  def initialize username_or_empty_string,find_username=true
+    @user = false
+    @profile = false
+    @profile_pic = false
+    @token = false
+    @username = username_or_empty_string
+    if find_username
+      if username_or_empty_string != '' || username_or_empty_string != ""
+        @user = Author.find_by({:username => username_or_empty_string})
+      end
+    end
+  end
+
+  def get_user_by_token token
+    if token
+      @user = Author.find_by({:token => token})
+    else
+      self.clone
+    end
   end
 
   def authenticate! password
     if @user.username
       # check password salt
       # https://github.com/codahale/bcrypt-ruby
-      @storedpassword = @user.salt.to_s
-      @hashedpassword = BCrypt::Password.new storedpassword
-      if @hashedpassword == password
+      @@storedpassword = @user.salt.to_s
+      @@hashedpassword = BCrypt::Password.new @@storedpassword
+      if @@hashedpassword == password
         # generate and store login token
         @@token = SecureRandom.base64
         @user.update({token:@@token})
@@ -40,18 +53,19 @@ class User
     if @user != nil
       @profile = Profile.create!
       @user = Author.create({:username => @username,
-                             :password => BCrypt::Password.create(password),
-                             profile_image_type:0,profile:@profile.id})
+                             :salt => new_salt(password),
+                             profile_image_type:0,profile:@profile})
+      @user.save!
 
     end
   end
 
-  def logged_in?
-    @user.token != '' # if token is blank, user is logged out
+  def logged_in? compared_token
+    @user.token == compared_token # if token != , user is logged out
   end
 
   def log_out
-    @user.token = ''
+    @user.token = SecureRandom.base64
     @user.save!
   end
 
@@ -60,7 +74,7 @@ class User
   end
 
   def new_salt password
-    BCrypt::Password.new password
+    BCrypt::Password.create password
   end
 
   def update_password password

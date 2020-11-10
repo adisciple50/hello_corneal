@@ -6,7 +6,8 @@ class LoginsController < ApplicationController
 
   post '/login' do
     begin
-      session[:token] = User(params['username']).authenticate! params['password']
+      puts "session username is:" + params['username']
+      session[:token] = User.new(params['username']).authenticate! params['password']
       # issue and record session token
       # flash[:success] = "Login Successful" # A good Flash Test
       redirect '/'
