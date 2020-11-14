@@ -19,11 +19,21 @@ RSpec.configure do |config|
   DatabaseCleaner.strategy = :truncation
 
   config.before do
-    DatabaseCleaner.clean
+    Author.destroy_all
+    Comment.destroy_all
+    Facebook.destroy_all
+    Post.destroy_all
+    Profile.destroy_all
+    Twitter.destroy_all
   end
 
   config.after do
-    DatabaseCleaner.clean
+    Author.destroy_all
+    Comment.destroy_all
+    Facebook.destroy_all
+    Post.destroy_all
+    Profile.destroy_all
+    Twitter.destroy_all
   end
 
   config.order = 'default'
